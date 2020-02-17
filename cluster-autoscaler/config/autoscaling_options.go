@@ -139,4 +139,6 @@ type AutoscalingOptions struct {
 	FilterOutSchedulablePodsUsesPacking bool
 	// IgnoredTaints is a list of taints to ignore when considering a node template for scheduling.
 	IgnoredTaints []string
+	// MaxNodesPerScaleUp is the maximum number of nodes that will be requested during a scale up event
+	MaxNodesPerScaleUp int
 }

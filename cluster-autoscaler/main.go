@@ -169,8 +169,8 @@ var (
 		"Filtering out schedulable pods before CA scale up by trying to pack the schedulable pods on free capacity on existing nodes."+
 			"Setting it to false employs a more lenient filtering approach that does not try to pack the pods on the nodes."+
 			"Pods with nominatedNodeName set are always filtered out.")
-
-	ignoreTaintsFlag = multiStringFlag("ignore-taint", "Specifies a taint to ignore in node templates when considering to scale a node group")
+	ignoreTaintsFlag   = multiStringFlag("ignore-taint", "Specifies a taint to ignore in node templates when considering to scale a node group")
+	maxNodesPerScaleUp = flag.Int("max-nodes-per-scale-up", -1, "The maximum number of nodes that will be requested during a scale up event")
 )
 
 func createAutoscalingOptions() config.AutoscalingOptions {
@@ -237,6 +237,7 @@ func createAutoscalingOptions() config.AutoscalingOptions {
 		FilterOutSchedulablePodsUsesPacking: *filterOutSchedulablePodsUsesPacking,
 		IgnoredTaints:                       *ignoreTaintsFlag,
 		NodeDeletionDelayTimeout:            *nodeDeletionDelayTimeout,
+		MaxNodesPerScaleUp:                  *maxNodesPerScaleUp,
 	}
 }
 

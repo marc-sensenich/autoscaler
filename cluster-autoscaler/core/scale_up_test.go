@@ -180,6 +180,56 @@ func TestScaleUpMaxMemoryLimitHitWithNotAutoscaledGroup(t *testing.T) {
 	simpleScaleUpTest(t, config, results)
 }
 
+func TestScaleUpExceedsMaxNodesPerScaleUp(t *testing.T) {
+	options := defaultOptions
+	options.MaxNodesPerScaleUp = 1
+	config := &scaleTestConfig{
+		nodes: []nodeConfig{
+			{"n1", 2000, 100, 0, true, "ng1"},
+			{"n2", 4000, 100, 0, true, "ng2"},
+		},
+		pods: []podConfig{
+			{"p1", 1000, 0, 0, "n1"},
+		},
+		extraPods: []podConfig{
+			{"p-new-1", 2000, 0, 0, ""},
+			{"p-new-2", 2000, 0, 0, ""},
+		},
+		expansionOptionToChoose: groupSizeChange{groupName: "ng1", sizeChange: 2},
+		options:                 options,
+	}
+	results := &scaleTestResults{
+		finalOption: groupSizeChange{groupName: "ng1", sizeChange: 1},
+	}
+
+	simpleScaleUpTest(t, config, results)
+}
+
+func TestScaleUpIsUnderMaxNodesPerScaleUp(t *testing.T) {
+	options := defaultOptions
+	options.MaxNodesPerScaleUp = 5
+	config := &scaleTestConfig{
+		nodes: []nodeConfig{
+			{"n1", 2000, 100, 0, true, "ng1"},
+			{"n2", 4000, 100, 0, true, "ng2"},
+		},
+		pods: []podConfig{
+			{"p1", 1000, 0, 0, "n1"},
+		},
+		extraPods: []podConfig{
+			{"p-new-1", 2000, 0, 0, ""},
+			{"p-new-2", 2000, 0, 0, ""},
+		},
+		expansionOptionToChoose: groupSizeChange{groupName: "ng1", sizeChange: 2},
+		options:                 options,
+	}
+	results := &scaleTestResults{
+		finalOption: groupSizeChange{groupName: "ng1", sizeChange: 2},
+	}
+
+	simpleScaleUpTest(t, config, results)
+}
+
 func TestScaleUpCapToMaxTotalNodesLimit(t *testing.T) {
 	options := defaultOptions
 	options.MaxNodesTotal = 3
