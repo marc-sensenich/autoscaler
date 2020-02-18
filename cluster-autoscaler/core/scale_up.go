@@ -504,7 +504,7 @@ func ScaleUp(context *context.AutoscalingContext, processors *ca_processors.Auto
 
 		// Limit the number of new nodes if it exceeds the maximum per scale up
 		if context.MaxNodesPerScaleUp > 0 && newNodes > context.MaxNodesPerScaleUp {
-			klog.V(1).Infof("Estimated nodes %d exceeds max nodes per scale up event of %d; setting estimated nodes to ", newNodes, context.MaxNodesPerScaleUp)
+			klog.V(1).Infof("Estimated nodes %d exceeds max nodes per scale up event of %d; setting estimated nodes to %d", newNodes, context.MaxNodesPerScaleUp)
 			newNodes = context.MaxNodesPerScaleUp
 		}
 
