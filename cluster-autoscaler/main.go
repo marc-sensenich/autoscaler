@@ -119,6 +119,8 @@ var (
 			"for scale down when some candidates from previous iteration are no longer valid."+
 			"When calculating the pool size for additional candidates we take"+
 			"max(#nodes * scale-down-candidates-pool-ratio, scale-down-candidates-pool-min-count).")
+	scaleUpDelayAfterAdd = flag.Duration("scale-up-delay-after-add", 0*time.Minute,
+		"How long after scale up that scale up evaluation resumes")
 	nodeDeletionDelayTimeout = flag.Duration("node-deletion-delay-timeout", 2*time.Minute, "Maximum time CA waits for removing delay-deletion.cluster-autoscaler.kubernetes.io/ annotations before deleting the node.")
 	scanInterval             = flag.Duration("scan-interval", 10*time.Second, "How often cluster is reevaluated for scale up or down")
 	maxNodesTotal            = flag.Int("max-nodes-total", 0, "Maximum number of nodes in all node groups. Cluster autoscaler will not grow the cluster beyond this number.")
@@ -226,6 +228,7 @@ func createAutoscalingOptions() config.AutoscalingOptions {
 		ScaleDownNonEmptyCandidatesCount: *scaleDownNonEmptyCandidatesCount,
 		ScaleDownCandidatesPoolRatio:     *scaleDownCandidatesPoolRatio,
 		ScaleDownCandidatesPoolMinCount:  *scaleDownCandidatesPoolMinCount,
+		ScaleUpDelayAfterAdd:             *scaleUpDelayAfterAdd,
 		WriteStatusConfigMap:             *writeStatusConfigMapFlag,
 		BalanceSimilarNodeGroups:         *balanceSimilarNodeGroupsFlag,
 		ConfigNamespace:                  *namespace,

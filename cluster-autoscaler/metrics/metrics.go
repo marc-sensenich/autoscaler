@@ -233,6 +233,14 @@ var (
 		},
 	)
 
+	scaleUpInCooldown = k8smetrics.NewGauge(
+		&k8smetrics.GaugeOpts{
+			Namespace: caNamespace,
+			Name:      "scale_up_in_cooldown",
+			Help:      "Whether or not the scale up is in cooldown. 1 if its, 0 otherwise.",
+		},
+	)
+
 	/**** Metrics related to NodeAutoprovisioning ****/
 	napEnabled = k8smetrics.NewGauge(
 		&k8smetrics.GaugeOpts{
@@ -278,6 +286,7 @@ func RegisterAll() {
 	legacyregistry.MustRegister(evictionsCount)
 	legacyregistry.MustRegister(unneededNodesCount)
 	legacyregistry.MustRegister(scaleDownInCooldown)
+	legacyregistry.MustRegister(scaleUpInCooldown)
 	legacyregistry.MustRegister(napEnabled)
 	legacyregistry.MustRegister(nodeGroupCreationCount)
 	legacyregistry.MustRegister(nodeGroupDeletionCount)
@@ -405,3 +414,14 @@ func UpdateScaleDownInCooldown(inCooldown bool) {
 		scaleDownInCooldown.Set(0.0)
 	}
 }
+
+// UpdateScaleUpInCooldown registers if the cluster autoscaler
+// scaleup is in cooldown
+func UpdateScaleUpInCooldown(inCooldown bool) {
+	if inCooldown {
+		scaleUpInCooldown.Set(1.0)
+	} else {
+		scaleUpInCooldown.Set(0.0)
+	}
+}
+
